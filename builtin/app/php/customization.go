@@ -11,5 +11,6 @@ type customizations struct {
 
 func (c *customizations) processPhp(d *schema.FieldData) error {
 	c.Opts.Bindata.Context["php_version"] = d.Get("php_version")
+	c.Opts.Bindata.Context["php_runtime"] = d.Get("php_runtime")
 	return nil
 }

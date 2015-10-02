@@ -37,6 +37,11 @@ func (a *App) Compile(ctx *app.Context) (*app.CompileResult, error) {
 						Default:     "5.6",
 						Description: "PHP version to install",
 					},
+					"php_runtime": &schema.FieldSchema{
+						Type:        schema.TypeString,
+						Default:     "php5",
+						Description: "PHP runtime to use",
+					}
 				},
 			},
 		},

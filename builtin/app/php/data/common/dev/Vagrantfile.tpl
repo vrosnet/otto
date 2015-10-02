@@ -66,17 +66,29 @@ ol "Adding apt repositories and updating..."
 export DEBIAN_FRONTEND=noninteractive
 oe sudo apt-get update -y
 oe sudo apt-get install -y python-software-properties software-properties-common apt-transport-https
+
+{{ if php_runtime == "php5" }}
 oe sudo add-apt-repository -y ppa:ondrej/php5-{{ php_version }}
+{{else if php_runtime == "hhvm" }}
+oe sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
+oe sudo add-apt-repository "deb http://dl.hhvm.com/ubuntu $(lsb_release -sc)
+{{end}}
+
 # Seems to be required to prevent "unauthenticated packages"
 # errors out of apt-get install.
 oe sudo apt-key update
 oe sudo apt-get update -y
 
+PHP_PACKAGES="bzr git mercurial build-essential curl"
+
+{{ if php_runtime == "php5" }}
+PHP_PACKAGES="${PHP_PACKAGES} php5 php5-mcrypt php5-mysql php5-fpm php5-gd php5-readline php5-pgsql"
+{{else if php_runtime == "hhvm" }}
+PHP_PACKAGES="${PHP_PACKAGES} hhvm"
+{{end}}
+
 ol "Installing PHP and supporting packages..."
-oe sudo apt-get install -y php5 \
-  bzr git mercurial build-essential \
-  curl \
-  php5-mcrypt php5-mysql php5-fpm php5-gd php5-readline php5-pgsql
+oe sudo apt-get install -y "${PHP_PACKAGES}"
 
 ol "Installing Composer..."
 cd /tmp
